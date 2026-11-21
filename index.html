@@ -93,22 +93,15 @@ a:hover { color: var(--accent-text); }
 
 /* Header */
 .site-head { display: flex; justify-content: space-between; align-items: center; padding: 28px 0; }
-.wordmark { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; letter-spacing: -0.01em; text-decoration: none; }
+.wordmark { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; letter-spacing: -0.01em; text-decoration: none; color: var(--det); }
 .wordmark-mark { width: 34px; height: 34px; display: block; }
 .head-link { font-size: 16px; font-weight: 500; }
 
 /* Hero */
-.hero { padding: 56px 0 24px; }
-.hero h1 {
-  margin: 0;
-  font-weight: 700;
-  font-size: clamp(34px, 8.4vw, 96px);
-  line-height: 0.98;
-  letter-spacing: -0.035em;
-}
-.hero h1 .line { display: block; }
-.hero h1 .line + .line { color: var(--steel); }
-.lede { margin: 32px 0 0; font-size: clamp(19px, 2.2vw, 22px); line-height: 1.5; }
+.hero { padding: 48px 0 56px; display: grid; grid-template-columns: 1fr 360px; gap: 48px; align-items: start; }
+.label { display: block; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }
+.hero h1 { margin: 14px 0 0; font-weight: 700; font-size: clamp(32px, 4.6vw, 52px); line-height: 1.08; letter-spacing: -0.025em; }
+.lede { margin: 24px 0 0; font-size: clamp(18px, 2vw, 21px); line-height: 1.5; color: var(--steel); }
 .hero-actions { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: center; }
 .btn {
   display: inline-block; background: var(--btn-bg); color: var(--btn-ink);
@@ -118,16 +111,28 @@ a:hover { color: var(--accent-text); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn:hover { color: #141B2B; } }
 :root[data-theme="dark"] .btn:hover { color: #141B2B; }
 
-/* Diagram */
-.diagram { margin: 48px 0 8px; }
-.diagram canvas { display: block; width: 100%; aspect-ratio: 960 / 430; }
-.diagram-caption { margin: 18px auto 0; max-width: 60ch; text-align: center; font-size: 17px; color: var(--steel); }
-.diagram-caption strong { color: var(--ink); font-weight: 700; }
-@media (max-width: 640px) { .diagram canvas { aspect-ratio: 390 / 420; } }
+/* Brand lockup: the wordmark continues the tensor's navy base */
+.brand { margin: 0; }
+.lockup { display: flex; align-items: flex-end; gap: 10px; }
+.lockup img { width: 128px; height: 128px; display: block; flex: none; }
+.lockup .name { font-weight: 700; font-size: 36px; line-height: 1; letter-spacing: -0.02em; color: #2E3192; padding-bottom: 12px; }
+.signature { margin: 16px 0 0; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 13px; color: var(--steel); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .lockup { background: #fff; border-radius: 20px; padding: 14px 20px 14px 10px; } }
+:root[data-theme="dark"] .lockup { background: #fff; border-radius: 20px; padding: 14px 20px 14px 10px; }
+
+/* Purpose: why, mission, vision, with the mechanism animated beside it */
+.purpose { display: grid; grid-template-columns: 1fr 420px; gap: 56px; align-items: center; }
+.mv .label { margin-top: 28px; }
+.mv .label:first-child { margin-top: 0; }
+.mv p { margin: 8px 0 0; font-size: 20px; line-height: 1.45; }
+.mv p.small { font-size: 16px; color: var(--steel); }
+.diagram { margin: 0; }
+.diagram canvas { display: block; width: 100%; aspect-ratio: 420 / 400; }
+.diagram-caption { margin: 12px 0 0; text-align: center; font-size: 15px; font-weight: 700; }
 
 /* Sections */
 section { padding: 72px 0; border-top: 1px solid var(--rule); }
-.hero, .diagram-wrap { border-top: 0; }
+.hero { border-top: 0; }
 h2 { font-size: clamp(28px, 3.6vw, 38px); line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 16px; font-weight: 700; }
 .section-intro { color: var(--steel); margin: 0 0 40px; }
 
@@ -174,7 +179,12 @@ footer p { margin: 0; }
 @media (max-width: 820px) {
   body { font-size: 17px; }
   .wrap { padding: 0 16px; }
-  .hero { padding-top: 32px; }
+  .hero { padding-top: 24px; grid-template-columns: 1fr; gap: 28px; }
+  .brand { order: -1; }
+  .lockup img { width: 84px; height: 84px; }
+  .lockup .name { font-size: 30px; padding-bottom: 8px; }
+  .purpose { grid-template-columns: 1fr; gap: 32px; }
+  .diagram { max-width: 380px; margin: 0 auto; }
   .pillars, .steps { grid-template-columns: 1fr; gap: 40px; }
   .loop li { grid-template-columns: 1fr; gap: 10px; }
   .loop .head { display: none; }
@@ -182,8 +192,6 @@ footer p { margin: 0; }
   .steps { gap: 16px; }
   .about-grid { grid-template-columns: 1fr; gap: 32px; }
   section { padding: 56px 0; }
-  .diagram { margin-top: 40px; }
-  .diagram-captions { font-size: 14px; }
 }
 </style>
 </head>
@@ -201,18 +209,32 @@ footer p { margin: 0; }
 <main>
   <div class="wrap">
     <section class="hero" aria-labelledby="hero-title">
-      <h1 id="hero-title"><span class="line">Non&#8209;deterministic in.</span><span class="line">Predictable out.</span></h1>
-      <p class="lede measure">BrontoPoint helps platform, automotive and robotics teams run real-time, security-critical and AI workloads on the same silicon, and prove they behave.</p>
-      <div class="hero-actions">
-        <a class="btn" href="mailto:contact@brontopoint.com?subject=Engineering%20advisory%20enquiry">Start a conversation</a>
-        <a href="#work">See what we work on</a>
+      <div>
+        <span class="label">Mixed criticality · Platform security · Physical AI</span>
+        <h1 id="hero-title">Predictable, secure and accountable platforms for critical functions and AI.</h1>
+        <p class="lede measure">BrontoPoint helps platform, automotive and robotics teams run real-time, security-critical and AI workloads on the same silicon, and prove they behave.</p>
+        <div class="hero-actions">
+          <a class="btn" href="mailto:contact@brontopoint.com?subject=Engineering%20advisory%20enquiry">Start a conversation</a>
+          <a href="#work">See what we work on</a>
+        </div>
       </div>
+      <figure class="brand" aria-label="BrontoPoint">
+        <div class="lockup"><img src="assets/brontopoint-logo.svg" alt="" width="128" height="128"><span class="name">BrontoPoint</span></div>
+        <figcaption class="signature">Non-deterministic in, predictable out</figcaption>
+      </figure>
     </section>
 
-    <div class="diagram-wrap">
+    <section class="purpose" aria-label="Vision and mission">
+      <div class="mv">
+        <span class="label">Vision</span>
+        <p>When software-defined systems move AI and other best-effort workloads onto the same silicon as functions that must not fail, in vehicles, robots, factories and edge systems, they should be trusted only when their behaviour is measured and verified, not assumed.</p>
+        <span class="label">Mission</span>
+        <p>Help teams run critical functions alongside AI and other best-effort workloads on shared platforms, with behaviour they can measure, attribute, control and verify.</p>
+        <p class="small">The track record behind this, with case studies and published benchmarks, is on <a href="https://zlhk100.github.io/">Lei Zhou's site</a>.</p>
+      </div>
       <figure class="diagram">
         <canvas id="galton" role="img" aria-label="Animated diagram in the style of a Galton board. Orange particles move at random at the top: bursty inference, interrupts, contention and attackers. One at a time they drop through a field of pegs labelled measure, attribute, control and verify, which is the engineering work. They settle in order into three bins labelled predictable, secure and accountable."></canvas>
-        <figcaption class="diagram-caption"><strong>Measure, attribute, control, verify.</strong> The engineering work that makes a platform predictable, secure and accountable.</figcaption>
+        <figcaption class="diagram-caption">Measure, attribute, control, verify.</figcaption>
       </figure>
       <script>
 (() => {
@@ -329,7 +351,7 @@ footer p { margin: 0; }
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { if (reduce) draw(performance.now()); });
 })();
       </script>
-    </div>
+    </section>
 
     <section aria-labelledby="loop-title">
       <h2 id="loop-title">One loop, applied to timing and to trust</h2>
