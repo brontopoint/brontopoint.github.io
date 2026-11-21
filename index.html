@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BrontoPoint Systems | Mixed-criticality, platform security and Physical AI engineering</title>
+<link rel="canonical" href="https://brontopoint.com/">
+<meta name="description" content="BrontoPoint Systems Inc. helps platform, automotive and robotics teams run real-time, security-critical and AI workloads on shared silicon, and prove they behave.">
+<meta property="og:title" content="BrontoPoint Systems">
+<meta property="og:description" content="Non-deterministic in, predictable out. Engineering advisory for mixed-criticality, platform security and Physical AI.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BrontoPoint Systems">
+<meta name="twitter:card" content="summary">
+<meta property="og:url" content="https://brontopoint.com/">
+<link rel="icon" href="assets/brontopoint-mark.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:image" content="https://brontopoint.com/assets/avatar-512.png">
+<meta property="og:image:alt" content="BrontoPoint Systems logo">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"BrontoPoint Systems Inc.","alternateName":"BrontoPoint","url":"https://brontopoint.com/","logo":"https://brontopoint.com/assets/avatar-512.png","email":"contact@brontopoint.com","description":"Engineering advisory for mixed-criticality systems, full-stack platform security and Physical AI: real-time, security-critical and AI workloads on shared silicon.","address":{"@type":"PostalAddress","addressLocality":"Markham","addressRegion":"ON","addressCountry":"CA"},"areaServed":"Worldwide","founder":{"@type":"Person","name":"Lei Zhou","url":"https://zlhk100.github.io/"},"sameAs":["https://github.com/brontopoint"],"knowsAbout":["Mixed-criticality systems","Hypervisors and virtualization","GPU virtualization","Real-time Linux and RTOS latency analysis","Interference characterization","Hardware root of trust","Secure boot","Trusted execution environments","Confidential computing","Remote attestation","BSP and firmware security assessment","Threat modelling","Physical AI and robotics platforms"]}
+</script>
+<style>
+/* Brand palette: orange #F15A29 (non-deterministic), sky blue #37AFE4 (transition), navy #2E3192 (structure) */
+:root {
+  --ground: #F3F5F8;
+  --surface: #FFFFFF;
+  --ink: #1E2A44;
+  --steel: #56657C;
+  --rule: #CBD3DD;
+  --orange: #F15A29;
+  --sky: #37AFE4;
+  --navy: #2E3192;
+  --det: #2E3192;
+  --accent-text: #2E3192;
+  --btn-bg: #2E3192;
+  --btn-ink: #FFFFFF;
+  --btn-hover: #1E2A44;
+  --tick: #2E3192;
+  --band: rgba(46, 49, 146, 0.07);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #141B2B;
+    --surface: #1A2335;
+    --ink: #E6EAF1;
+    --steel: #A3AFC2;
+    --rule: #34415A;
+    --accent-text: #37AFE4;
+    --det: #8E92E6;
+    --btn-bg: #37AFE4;
+    --btn-ink: #141B2B;
+    --btn-hover: #E6EAF1;
+    --tick: #E6EAF1;
+    --band: rgba(230, 234, 241, 0.08);
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #141B2B;
+  --surface: #1A2335;
+  --ink: #E6EAF1;
+  --steel: #A3AFC2;
+  --rule: #34415A;
+  --accent-text: #37AFE4;
+  --det: #8E92E6;
+  --btn-bg: #37AFE4;
+  --btn-ink: #141B2B;
+  --btn-hover: #E6EAF1;
+  --tick: #E6EAF1;
+  --band: rgba(230, 234, 241, 0.08);
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: "Schibsted Grotesk", system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 1.55;
+  font-feature-settings: "tnum" 1;
+}
+a { color: inherit; text-decoration-color: var(--orange); text-underline-offset: 3px; text-decoration-thickness: 2px; }
+a:hover { color: var(--accent-text); }
+:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; border-radius: 4px; }
+
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+.measure { max-width: 64ch; }
+
+/* Header */
+.site-head { display: flex; justify-content: space-between; align-items: center; padding: 28px 0; }
+.wordmark { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; letter-spacing: -0.01em; text-decoration: none; }
+.wordmark-mark { width: 34px; height: 34px; display: block; }
+.head-link { font-size: 16px; font-weight: 500; }
+
+/* Hero */
+.hero { padding: 56px 0 24px; }
+.hero h1 {
+  margin: 0;
+  font-weight: 700;
+  font-size: clamp(34px, 8.4vw, 96px);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+.hero h1 .line { display: block; }
+.hero h1 .line + .line { color: var(--steel); }
+.lede { margin: 32px 0 0; font-size: clamp(19px, 2.2vw, 22px); line-height: 1.5; }
+.hero-actions { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: center; }
+.btn {
+  display: inline-block; background: var(--btn-bg); color: var(--btn-ink);
+  padding: 14px 22px; border-radius: 8px; font-weight: 500; text-decoration: none; font-size: 17px;
+}
+.btn:hover { color: var(--btn-ink); background: var(--btn-hover); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn:hover { color: #141B2B; } }
+:root[data-theme="dark"] .btn:hover { color: #141B2B; }
+
+/* Diagram */
+.diagram { margin: 48px 0 8px; }
+.diagram canvas { display: block; width: 100%; aspect-ratio: 960 / 430; }
+.diagram-caption { margin: 18px auto 0; max-width: 60ch; text-align: center; font-size: 17px; color: var(--steel); }
+.diagram-caption strong { color: var(--ink); font-weight: 700; }
+@media (max-width: 640px) { .diagram canvas { aspect-ratio: 390 / 420; } }
+
+/* Sections */
+section { padding: 72px 0; border-top: 1px solid var(--rule); }
+.hero, .diagram-wrap { border-top: 0; }
+h2 { font-size: clamp(28px, 3.6vw, 38px); line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 16px; font-weight: 700; }
+.section-intro { color: var(--steel); margin: 0 0 40px; }
+
+/* Loop: one method, two disciplines */
+.loop { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.loop li { display: grid; grid-template-columns: 180px 1fr 1fr; gap: 32px; padding: 22px 0; border-bottom: 1px solid var(--rule); }
+.loop .step { font-weight: 700; font-size: 22px; letter-spacing: -0.01em; }
+.loop .step span { display: block; font-weight: 500; font-size: 15px; color: var(--steel); letter-spacing: 0; margin-top: 2px; }
+.loop p { margin: 0; font-size: 16px; }
+.loop .head { padding: 0 0 12px; border-bottom: 1px solid var(--rule); }
+.loop .head p { font-weight: 700; font-size: 15px; color: var(--steel); }
+.loop .lab { display: none; }
+
+/* Pillars */
+.pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+.pillar h3 { margin: 0; font-size: 30px; letter-spacing: -0.02em; font-weight: 700; }
+.pillar .area { margin: 4px 0 18px; font-weight: 500; color: var(--steel); font-size: 16px; }
+.pillar .question { margin: 0 0 18px; font-size: 19px; line-height: 1.45; padding-left: 14px; border-left: 3px solid var(--orange); }
+.pillar ul { margin: 0; padding-left: 18px; font-size: 16px; color: var(--ink); }
+.pillar li + li { margin-top: 8px; }
+
+/* Engagement steps (a real sequence) */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; counter-reset: step; }
+.steps li { counter-increment: step; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 24px; }
+.steps li::before { content: counter(step); display: block; font-weight: 700; font-size: 15px; color: var(--accent-text); margin-bottom: 10px; }
+.steps h3 { margin: 0 0 8px; font-size: 20px; }
+.steps p { margin: 0; font-size: 16px; color: var(--steel); }
+.terms { margin-top: 32px; font-size: 16px; color: var(--steel); }
+
+/* About + contact */
+.about-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 56px; align-items: start; }
+.about-grid p { margin: 0 0 16px; }
+.contact-box { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 28px; }
+.contact-box h3 { margin: 0 0 8px; font-size: 22px; }
+.contact-box p { margin: 0 0 20px; font-size: 16px; color: var(--steel); }
+.contact-box .btn { margin-bottom: 18px; }
+.contact-box .alt { font-size: 16px; margin: 0; }
+
+/* Footer */
+footer { border-top: 1px solid var(--rule); padding: 32px 0 48px; font-size: 14px; color: var(--steel); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; }
+footer p { margin: 0; }
+
+@media (max-width: 820px) {
+  body { font-size: 17px; }
+  .wrap { padding: 0 16px; }
+  .hero { padding-top: 32px; }
+  .pillars, .steps { grid-template-columns: 1fr; gap: 40px; }
+  .loop li { grid-template-columns: 1fr; gap: 10px; }
+  .loop .head { display: none; }
+  .loop .lab { display: inline; font-weight: 700; }
+  .steps { gap: 16px; }
+  .about-grid { grid-template-columns: 1fr; gap: 32px; }
+  section { padding: 56px 0; }
+  .diagram { margin-top: 40px; }
+  .diagram-captions { font-size: 14px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="site-head">
+    <a class="wordmark" href="/" aria-label="BrontoPoint Systems, home">
+      <img class="wordmark-mark" src="assets/brontopoint-mark.svg" alt="" width="34" height="34">
+      BrontoPoint
+    </a>
+    <a class="head-link" href="#contact">Contact</a>
+  </header>
+</div>
+
+<main>
+  <div class="wrap">
+    <section class="hero" aria-labelledby="hero-title">
+      <h1 id="hero-title"><span class="line">Non&#8209;deterministic in.</span><span class="line">Predictable out.</span></h1>
+      <p class="lede measure">BrontoPoint helps platform, automotive and robotics teams run real-time, security-critical and AI workloads on the same silicon, and prove they behave.</p>
+      <div class="hero-actions">
+        <a class="btn" href="mailto:contact@brontopoint.com?subject=Engineering%20advisory%20enquiry">Start a conversation</a>
+        <a href="#work">See what we work on</a>
+      </div>
+    </section>
+
+    <div class="diagram-wrap">
+      <figure class="diagram">
+        <canvas id="galton" role="img" aria-label="Animated diagram in the style of a Galton board. Orange particles move at random at the top: bursty inference, interrupts, contention and attackers. One at a time they drop through a field of pegs labelled measure, attribute, control and verify, which is the engineering work. They settle in order into three bins labelled predictable, secure and accountable."></canvas>
+        <figcaption class="diagram-caption"><strong>Measure, attribute, control, verify.</strong> The engineering work that makes a platform predictable, secure and accountable.</figcaption>
+      </figure>
+      <script>
+(() => {
+  const cv = document.getElementById("galton"), ctx = cv.getContext("2d");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  let W, H, dpr, L, C;
+  const STEPS = ["Measure", "Attribute", "Control", "Verify"], BINS = ["Predictable", "Secure", "Accountable"], ROWS = 8;
+  const cloud = [], falling = [], bins = [[], [], []]; let last = 0, spawnT = 0, fade = 1;
+  function layout() {
+    dpr = window.devicePixelRatio || 1; const r = cv.getBoundingClientRect();
+    W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const small = W < 560, base = Math.min(W * (small ? 0.62 : 0.5), 520);
+    L = { small, cloudTop: H * 0.04, cloudBot: H * 0.2, apex: H * 0.25, y0: H * 0.3, y1: H * 0.7, base,
+          dx: base / ROWS, binTop: H * 0.76, binBot: H * 0.9, ball: Math.max(3, Math.min(6.5, W * 0.0068)),
+          peg: Math.max(1.8, Math.min(3.4, W * 0.0034)), font: small ? 11 : 14 };
+    L.binX = [W / 2 - base * 0.36, W / 2, W / 2 + base * 0.36]; L.binW = base * 0.3;
+    L.cap = Math.floor((L.binBot - L.binTop) / (L.ball * 1.9)) * Math.max(1, Math.floor(L.binW / (L.ball * 2.1)));
+    cloud.length = 0; const n = small ? 26 : 44;
+    for (let i = 0; i < n; i++) cloud.push(newParticle());
+  }
+  function newParticle() {
+    return { x: W * (0.06 + Math.random() * 0.88), y: L.cloudTop + Math.random() * (L.cloudBot - L.cloudTop),
+             r: L.ball * (0.55 + Math.random() * 0.5) };
+  }
+  function rowY(r) { return L.y0 + (L.y1 - L.y0) * r / (ROWS - 1); }
+  function pegX(r, i) { return W / 2 + (i - r / 2) * L.dx; }
+  function spawn() {
+    const k = Math.floor(Math.random() * cloud.length), p = cloud[k];
+    cloud[k] = newParticle();
+    const target = Math.floor(Math.random() * 3), xs = []; let x = W / 2;
+    for (let r = 0; r < ROWS; r++) {
+      const steer = r >= 4, tx = L.binX[target];
+      let dir = Math.random() < 0.5 ? -1 : 1;
+      if (steer) dir = Math.abs(x - tx) < L.dx * 0.25 ? (Math.random() < 0.5 ? -1 : 1) * 0.0 : (tx > x ? 1 : -1);
+      x += dir * L.dx / 2; xs.push(x);
+    }
+    falling.push({ sx: p.x, sy: p.y, xs, target, t: 0, r: L.ball });
+  }
+  function pos(b) {
+    // t: 0..1 funnel to apex, then 1..ROWS+1 through rows, then into bin
+    if (b.t < 1) { const e = b.t * b.t * (3 - 2 * b.t); return [b.sx + (W / 2 - b.sx) * e, b.sy + (L.apex - b.sy) * e]; }
+    const u = b.t - 1, r = Math.floor(u), f = u - r;
+    if (r < ROWS) {
+      const xA = r === 0 ? W / 2 : b.xs[r - 1], yA = r === 0 ? L.apex : rowY(r - 1) - L.dx * 0.18;
+      const xB = b.xs[r], yB = rowY(r) - L.dx * 0.18;
+      return [xA + (xB - xA) * f, yA + (yB - yA) * f * f];
+    }
+    return [b.xs[ROWS - 1] + (L.binX[b.target] - b.xs[ROWS - 1]) * Math.min(1, f * 1.4), rowY(ROWS - 1) + (L.binBot - rowY(ROWS - 1)) * f * f];
+  }
+  function settle(b) {
+    const bin = bins[b.target]; bin.push(1);
+    if (bins.some(q => q.length >= L.cap)) fade = 0.999;
+  }
+  function stackPos(k, i) {
+    const per = Math.max(1, Math.floor(L.binW / (L.ball * 2.1))), col = i % per, row = Math.floor(i / per);
+    const w = per * L.ball * 2.1;
+    return [L.binX[k] - w / 2 + L.ball * 1.05 + col * L.ball * 2.1, L.binBot - L.ball - row * L.ball * 1.9];
+  }
+  function draw(now) {
+    const dt = Math.min(50, now - (last || now)) / 1000; last = now;
+    const O = css("--orange"), S = css("--sky"), D = css("--det") || css("--navy"), ink = css("--ink"), steel = css("--steel"), rule = css("--rule");
+    ctx.clearRect(0, 0, W, H);
+    // entropy cloud: Brownian motion
+    ctx.fillStyle = O;
+    for (const p of cloud) {
+      if (!reduce) { p.x += (Math.random() - 0.5) * 60 * dt; p.y += (Math.random() - 0.5) * 60 * dt; }
+      p.x = Math.min(W * 0.97, Math.max(W * 0.03, p.x)); p.y = Math.min(L.cloudBot, Math.max(L.cloudTop, p.y));
+      ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    // pegs, grouped by step
+    for (let r = 0; r < ROWS; r++) {
+      ctx.fillStyle = r < 4 ? steel : D; ctx.globalAlpha = r < 4 ? 0.55 : 1;
+      for (let i = 0; i <= r; i++) { ctx.beginPath(); ctx.arc(pegX(r, i), rowY(r), L.peg, 0, 7); ctx.fill(); }
+    }
+    ctx.globalAlpha = 1;
+    ctx.font = `500 ${L.font}px "Schibsted Grotesk", system-ui, sans-serif`; ctx.textBaseline = "middle";
+    for (let s = 0; s < 4; s++) {
+      const y = (rowY(2 * s) + rowY(2 * s + 1)) / 2, x = W / 2 + (2 * s + 1) / 2 * L.dx + L.dx * 0.9;
+      ctx.fillStyle = s < 2 ? steel : ink; ctx.textAlign = "left"; ctx.fillText(STEPS[s], x, y);
+    }
+    // bins
+    ctx.strokeStyle = D; ctx.lineWidth = 2;
+    for (let k = 0; k < 3; k++) {
+      const x0 = L.binX[k] - L.binW / 2, x1 = L.binX[k] + L.binW / 2;
+      ctx.beginPath(); ctx.moveTo(x0, L.binTop); ctx.lineTo(x0, L.binBot + 1); ctx.lineTo(x1, L.binBot + 1); ctx.lineTo(x1, L.binTop); ctx.stroke();
+      ctx.fillStyle = D; ctx.globalAlpha = fade;
+      bins[k].forEach((_, i) => { const [x, y] = stackPos(k, i); ctx.beginPath(); ctx.arc(x, y, L.ball, 0, 7); ctx.fill(); });
+      ctx.globalAlpha = 1; ctx.fillStyle = ink; ctx.textAlign = "center";
+      ctx.font = `700 ${L.font + 1}px "Schibsted Grotesk", system-ui, sans-serif`;
+      ctx.fillText(BINS[k], L.binX[k], L.binBot + (H - L.binBot) / 2 + 2);
+    }
+    // falling balls
+    for (const b of falling) {
+      if (!reduce) b.t += dt * (b.t < 1 ? 1.6 : 3.2);
+      const [x, y] = pos(b), stage = b.t - 1;
+      ctx.fillStyle = stage < 2 ? O : stage < ROWS ? S : D;
+      ctx.beginPath(); ctx.arc(x, y, b.r, 0, 7); ctx.fill();
+    }
+    for (let i = falling.length - 1; i >= 0; i--) if (falling[i].t >= ROWS + 2) { settle(falling[i]); falling.splice(i, 1); }
+    if (fade < 1) { fade -= dt * 0.8; if (fade <= 0) { bins.forEach(q => q.length = 0); fade = 1; } }
+    spawnT += dt; if (!reduce && spawnT > 0.32) { spawnT = 0; spawn(); }
+    if (!reduce) requestAnimationFrame(draw);
+  }
+  function staticFrame() {
+    [9, 7, 8].forEach((n, k) => { for (let i = 0; i < n; i++) bins[k].push(1); });
+    for (let j = 0; j < 6; j++) { spawn(); falling[j].t = 1 + j * 1.5; }
+    draw(performance.now());
+  }
+  layout();
+  if (reduce) staticFrame(); else requestAnimationFrame(draw);
+  let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { layout(); bins.forEach(q => q.length = 0); falling.length = 0; if (reduce) staticFrame(); }, 150); });
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { if (reduce) draw(performance.now()); });
+})();
+      </script>
+    </div>
+
+    <section aria-labelledby="loop-title">
+      <h2 id="loop-title">One loop, applied to timing and to trust</h2>
+      <p class="section-intro measure">We use the same four steps for timing problems and for security problems.</p>
+      <ol class="loop">
+        <li class="head" aria-hidden="true"><p></p><p>Timing and determinism</p><p>Security and trust</p></li>
+        <li><p class="step">Measure<span>Collect the evidence</span></p>
+          <p><span class="lab">Timing: </span>Profile latency, jitter and interference between workloads on shared hardware.</p>
+          <p><span class="lab">Trust: </span>Integrity measurement: measured boot and recorded hashes of what actually loaded and ran.</p></li>
+        <li><p class="step">Attribute<span>Explain the cause</span></p>
+          <p><span class="lab">Timing: </span>Trace each outlier to its source: scheduler, cache, memory bandwidth, interrupt or driver.</p>
+          <p><span class="lab">Trust: </span>Tie every measurement to an identity and a chain of trust, so you know who and what it came from.</p></li>
+        <li><p class="step">Control<span>Act on the cause</span></p>
+          <p><span class="lab">Timing: </span>Configure, isolate or limit: partitioning, scheduling and quality-of-service on the resources that matter.</p>
+          <p><span class="lab">Trust: </span>Enforce policy at the boundary: TEEs, hypervisor isolation, key protection and access control.</p></li>
+        <li><p class="step">Verify<span>Prove the result</span></p>
+          <p><span class="lab">Timing: </span>Show the bound holds under load, with repeatable benchmarks and regression evidence.</p>
+          <p><span class="lab">Trust: </span>Remote attestation and tamper-evident records that a third party can check.</p></li>
+      </ol>
+    </section>
+
+    <section id="work" aria-labelledby="work-title">
+      <h2 id="work-title">Three questions we help answer</h2>
+      <p class="section-intro measure">Each engagement starts from a question your platform has to answer before it ships, and ends with measurements and a plan you can act on.</p>
+      <div class="pillars">
+        <article class="pillar">
+          <h3>Predictable</h3>
+          <p class="area">Mixed criticality and virtualization</p>
+          <p class="question">Will the control loop still meet its deadline when the AI workload spikes?</p>
+          <ul>
+            <li>Hypervisor and GPU virtualization architecture for consolidated platforms</li>
+            <li>Latency measurement and attribution on real-time Linux and RTOS</li>
+            <li>Interference characterization and isolation design</li>
+          </ul>
+        </article>
+        <article class="pillar">
+          <h3>Secure</h3>
+          <p class="area">Full-stack platform security and confidential computing</p>
+          <p class="question">Can you show the device boots, runs and reports only what it should?</p>
+          <ul>
+            <li>Hardware root of trust, secure boot and TEE design reviews</li>
+            <li>BSP and firmware security assessments</li>
+            <li>Threat modelling and security requirements, from device to cloud</li>
+          </ul>
+        </article>
+        <article class="pillar">
+          <h3>Accountable</h3>
+          <p class="area">Physical AI and robotics</p>
+          <p class="question">When AI shares a platform with control, can you trace what it did and when?</p>
+          <ul>
+            <li>Platform readiness reviews for AI on embedded SoCs</li>
+            <li>Benchmarking AI inference against real-time control on shared hardware</li>
+            <li>Tamper-evident execution records for AI agents</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="how-title">
+      <h2 id="how-title">How an engagement runs</h2>
+      <p class="section-intro measure">Remote-first, across time zones.</p>
+      <ol class="steps">
+        <li><h3>Conversation</h3><p>A short call to understand your platform, your constraints and the question you need answered.</p></li>
+        <li><h3>Scoped assessment</h3><p>A fixed-scope review with a written report: findings, measurements and a prioritised plan.</p></li>
+        <li><h3>Advisory or hands-on</h3><p>Ongoing architecture advice, or working alongside your engineers to build the evidence.</p></li>
+      </ol>
+      <p class="terms measure">Work is under NDA by default, and findings stay with you.</p>
+    </section>
+
+    <section id="contact" aria-labelledby="about-title">
+      <div class="about-grid">
+        <div>
+          <h2 id="about-title">Who you work with</h2>
+          <p class="measure">BrontoPoint is the engineering advisory practice of Lei Zhou, a platform architect whose work spans semiconductor, automotive, industrial and AI infrastructure.</p>
+          <p class="measure">Articles, talks and open-source work are at <a href="https://zlhk100.github.io/">zlhk100.github.io</a>.</p>
+        </div>
+        <aside class="contact-box" aria-label="Contact">
+          <h3>Start a conversation</h3>
+          <p>Tell us about your platform and the question you need answered. We reply within two business days.</p>
+          <a class="btn" href="mailto:contact@brontopoint.com?subject=Engineering%20advisory%20enquiry">Email contact@brontopoint.com</a>
+          <p class="alt"><a href="https://www.linkedin.com/in/leizhou">Lei Zhou on LinkedIn</a></p>
+        </aside>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>BrontoPoint Systems Inc., a federal corporation of Canada, based in Markham, Ontario.</p>
+    <p>Bronto is Greek for thunder.</p>
+  </div>
+</footer>
+</body>
+</html>
