@@ -1,6 +1,6 @@
 # brontopoint.com
 
-Landing page for BrontoPoint Systems Inc. A single static page served by GitHub Pages: `index.html`, `CNAME` (brontopoint.com) and `.nojekyll`. No build step.
+Landing page for Brontopoint Systems Inc. A single static page served by GitHub Pages: `index.html`, `CNAME` (brontopoint.com) and `.nojekyll`. No build step.
 
 ## Go-live checklist
 
